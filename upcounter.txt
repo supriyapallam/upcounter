@@ -1,0 +1,42 @@
+//Design Code
+module upcounter_dff(input clk,reset, output reg [1:0]q);
+  always@(posedge clk)
+    begin
+      if(reset)
+        q<=2'b00;
+      else
+        begin
+          q[1]<=q[1]^q[0];
+          q[0]<=~q[0];
+        end
+    end
+endmodule
+
+//Test Bench Code
+module tb();
+  wire [1:0]q;
+  reg clk,reset;
+  upcounter_dff dut(clk,reset,q);
+  initial
+    begin
+      clk=1'b0;
+      forever #5 clk=~clk;
+    end
+  initial
+    begin
+      reset=1'b1;
+      #10;
+      reset=1'b0;
+      #100;
+      $finish;
+    end
+  initial
+    begin
+      $monitor("q=%d",q);
+    end
+  initial
+    begin
+      $dumpfile("test.vcd");
+      $dumpvars(1);
+    end
+endmodule
